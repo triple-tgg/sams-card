@@ -103,20 +103,7 @@
             }
         }
 
-        /* Department badge */
-        .department-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #1e3a5f, #2c7ab8);
-            color: #ffffff;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 4px 14px;
-            border-radius: 20px;
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
+
 
         /* Save Contact Button */
         .save-contact-btn {
@@ -193,7 +180,7 @@
         </div>
 
         <div class="name">
-            <div class="department-badge" id="department"></div>
+
             <h1 class="firstname" id="firstname"></h1>
             <h2 class="lastname" id="lastname"></h2>
         </div>
@@ -401,7 +388,7 @@
             document.getElementById('firstname').textContent = firstName;
             document.getElementById('lastname').textContent = lastName;
             document.getElementById('position').textContent = person.position;
-            document.getElementById('department').textContent = person.department;
+
 
             // Email with mailto link
             const emailEl = document.getElementById('email');
