@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAMS Name Card</title>
+    <link rel="shortcut icon" href="https://pub-08436db5aed446488f1d41d50965fe1a.r2.dev/namecard/img/sam-logo.png"
+        type="image/x-icon">
+    <link rel="stylesheet" href="https://pub-08436db5aed446488f1d41d50965fe1a.r2.dev/namecard/style.css">
+    <style>
+        .icon-position,
+        .icon-email,
+        .icon-telphone {
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Loading State */
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            gap: 20px;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(30, 58, 95, 0.15);
+            border-top: 4px solid #1e3a5f;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: #1e3a5f;
+            font-size: 16px;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        /* Error State */
+        .error-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            gap: 16px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .error-icon {
+            font-size: 48px;
+            opacity: 0.6;
+        }
+
+        .error-title {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: #1e3a5f;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .error-message {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Fade in animation */
+        .card {
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Department badge */
+        .department-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #1e3a5f, #2c7ab8);
+            color: #ffffff;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 14px;
+            border-radius: 20px;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* Save Contact Button */
+        .save-contact-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            max-width: 280px;
+            padding: 14px 24px;
+            margin: 0 auto 30px auto;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2c7ab8 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(30, 58, 95, 0.3);
+            text-decoration: none;
+            position: relative;
+            z-index: 2;
+        }
+
+        .save-contact-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 58, 95, 0.4);
+        }
+
+        .save-contact-btn:active {
+            transform: translateY(0);
+        }
+
+        .save-contact-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: #ffffff;
+        }
+
+        /* Clickable info items */
+        .info-item a {
+            color: #333333;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .info-item a:hover {
+            color: #1e3a5f;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Loading State -->
+    <div id="loading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading...</div>
+    </div>
+
+    <!-- Error State (hidden by default) -->
+    <div id="error" class="error-container" style="display: none;">
+        <div class="error-icon">😕</div>
+        <div class="error-title">Card Not Found</div>
+        <div class="error-message">The name card you're looking for doesn't exist.<br>Please check the URL and try
+            again.</div>
+    </div>
+
+    <!-- Card (hidden by default) -->
+    <div id="namecard" class="card" style="display: none;">
+        <div class="logo">
+            <img src="https://pub-08436db5aed446488f1d41d50965fe1a.r2.dev/namecard/img/sam-logo.png" alt="SAMS Logo">
+        </div>
+
+        <div class="name">
+            <div class="department-badge" id="department"></div>
+            <h1 class="firstname" id="firstname"></h1>
+            <h2 class="lastname" id="lastname"></h2>
+        </div>
+
+        <div class="info">
+            <div class="info-item">
+                <div class="icon-position">
+                    <img src="https://pub-08436db5aed446488f1d41d50965fe1a.r2.dev/namecard/img/contactIcon.png"
+                        alt="Contact Icon">
+                </div>
+                <span id="position"></span>
+            </div>
+
+            <div class="info-item">
+                <div class="icon-email">
+                    <img src="https://pub-08436db5aed446488f1d41d50965fe1a.r2.dev/namecard/img/emailIcon.png"
+                        alt="Email Icon">
+                </div>
+                <span id="email"></span>
+            </div>
+
+            <div class="info-item">
+                <div class="icon-telphone">
+                    <img src="https://pub-08436db5aed446488f1d41d50965fe1a.r2.dev/namecard/img/telphoneIcon.png"
+                        alt="Telphone Icon">
+                </div>
+                <span id="phone"></span>
+            </div>
+        </div>
+
+        <div class="qr-section">
+            <div id="qrcode"></div>
+        </div>
+
+        <!-- <button class="save-contact-btn" id="saveContactBtn" onclick="saveContact()">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4zm9-5h-2v2h-2v2h2v2h2v-2h2v-2h-2z"/>
+            </svg>
+            Save Contact
+        </button> -->
+    </div>
+
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
+    <script>
+        // Google Sheet configuration
+        const SHEET_ID = '1ZDGGnFiDPoAtccN2EcVSGCaU_qGyZgQN_CtQ4CFbak0';
+        const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+
+        // Column index mapping (0-based)
+        const COL = {
+            NO: 0,
+            NAME: 1,
+            POSITION: 2,
+            EMAIL: 3,
+            PHONE: 4,
+            DEPARTMENT: 5,
+            SLUG: 6
+        };
+
+        // Get slug from URL path
+        function getSlugFromURL() {
+            const path = window.location.pathname;
+            // Remove leading/trailing slashes and get the slug
+            const slug = path.replace(/^\/+|\/+$/g, '');
+            return slug || null;
+        }
+
+        // Parse Google Sheet JSON response
+        function parseSheetData(responseText) {
+            // Google returns: google.visualization.Query.setResponse({...});
+            const jsonStr = responseText.match(/google\.visualization\.Query\.setResponse\((.+)\);?/);
+            if (!jsonStr || !jsonStr[1]) {
+                throw new Error('Failed to parse Google Sheet response');
+            }
+            return JSON.parse(jsonStr[1]);
+        }
+
+        // Find person by slug
+        function findPersonBySlug(data, slug) {
+            const rows = data.table.rows;
+            for (const row of rows) {
+                const rowSlug = row.c[COL.SLUG]?.v;
+                if (rowSlug && rowSlug.trim().toLowerCase() === slug.trim().toLowerCase()) {
+                    return {
+                        no: row.c[COL.NO]?.v,
+                        name: row.c[COL.NAME]?.v || '',
+                        position: row.c[COL.POSITION]?.v || '',
+                        email: row.c[COL.EMAIL]?.v || '',
+                        phone: row.c[COL.PHONE]?.v || '',
+                        department: row.c[COL.DEPARTMENT]?.v?.trim() || '',
+                        slug: rowSlug
+                    };
+                }
+            }
+            return null;
+        }
+
+        // Split name into first and last name
+        function splitName(fullName) {
+            const parts = fullName.trim().split(/\s+/);
+            if (parts.length === 1) {
+                return { firstName: parts[0], lastName: '' };
+            }
+            return {
+                firstName: parts[0],
+                lastName: parts.slice(1).join(' ')
+            };
+        }
+
+        // Format phone number for display
+        function formatPhoneDisplay(phone) {
+            return phone;
+        }
+
+        // Format phone number for tel: link
+        function formatPhoneTel(phone) {
+            // Remove all non-digit characters, add country code
+            const digits = phone.replace(/\D/g, '');
+            if (digits.startsWith('0')) {
+                return '+66' + digits.substring(1);
+            }
+            return '+' + digits;
+        }
+
+        // Generate QR Code with vCard data
+        function generateQRCode(person) {
+            const { firstName, lastName } = splitName(person.name);
+            const tel = formatPhoneTel(person.phone);
+
+            const vcard = [
+                'BEGIN:VCARD',
+                'VERSION:3.0',
+                `N:${lastName};${firstName};;;`,
+                `FN:${person.name}`,
+                `ORG:SAMS - Siam Aircraft Maintenance Services`,
+                `TITLE:${person.position}`,
+                `TEL;TYPE=CELL:${tel}`,
+                `EMAIL:${person.email}`,
+                'END:VCARD'
+            ].join('\n');
+
+            const qrContainer = document.getElementById('qrcode');
+            qrContainer.innerHTML = '';
+
+            new QRCode(qrContainer, {
+                text: vcard,
+                width: 160,
+                height: 160,
+                colorDark: '#1e3a5f',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.M
+            });
+        }
+
+        // Save contact as vCard file
+        function saveContact() {
+            const person = window._currentPerson;
+            if (!person) return;
+
+            const { firstName, lastName } = splitName(person.name);
+            const tel = formatPhoneTel(person.phone);
+
+            const vcard = [
+                'BEGIN:VCARD',
+                'VERSION:3.0',
+                `N:${lastName};${firstName};;;`,
+                `FN:${person.name}`,
+                `ORG:SAMS - Siam Aircraft Maintenance Services`,
+                `TITLE:${person.position}`,
+                `TEL;TYPE=CELL:${tel}`,
+                `EMAIL:${person.email}`,
+                'END:VCARD'
+            ].join('\r\n');
+
+            const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${person.name.replace(/\s+/g, '_')}.vcf`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Render person data to card
+        function renderCard(person) {
+            const { firstName, lastName } = splitName(person.name);
+
+            // Update page title
+            document.title = `${person.name} | SAMS`;
+
+            // Update meta description
+            let metaDesc = document.querySelector('meta[name="description"]');
+            if (!metaDesc) {
+                metaDesc = document.createElement('meta');
+                metaDesc.name = 'description';
+                document.head.appendChild(metaDesc);
+            }
+            metaDesc.content = `${person.name} - ${person.position} at SAMS`;
+
+            // Fill in card data
+            document.getElementById('firstname').textContent = firstName;
+            document.getElementById('lastname').textContent = lastName;
+            document.getElementById('position').textContent = person.position;
+            document.getElementById('department').textContent = person.department;
+
+            // Email with mailto link
+            const emailEl = document.getElementById('email');
+            emailEl.innerHTML = `<a href="mailto:${person.email}">${person.email}</a>`;
+
+            // Phone with tel link
+            const phoneEl = document.getElementById('phone');
+            const telLink = formatPhoneTel(person.phone);
+            phoneEl.innerHTML = `<a href="tel:${telLink}">${formatPhoneDisplay(person.phone)}</a>`;
+
+            // Generate QR Code
+            generateQRCode(person);
+
+            // Store person for save contact button
+            window._currentPerson = person;
+
+            // Show card, hide loading
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('namecard').style.display = 'flex';
+        }
+
+        // Show error state
+        function showError(message) {
+            document.getElementById('loading').style.display = 'none';
+            const errorEl = document.getElementById('error');
+            if (message) {
+                errorEl.querySelector('.error-message').innerHTML = message;
+            }
+            errorEl.style.display = 'flex';
+        }
+
+        // Main initialization
+        async function init() {
+            const slug = getSlugFromURL();
+
+            if (!slug) {
+                showError('No name card specified in the URL.<br>Use: <strong>card.sams.aero/your-slug</strong>');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEET_URL);
+                const text = await response.text();
+                const data = parseSheetData(text);
+                const person = findPersonBySlug(data, slug);
+
+                if (!person) {
+                    showError(`Card not found for: <strong>${slug}</strong><br>Please check the URL and try again.`);
+                    return;
+                }
+
+                renderCard(person);
+            } catch (error) {
+                console.error('Error loading card data:', error);
+                showError('Unable to load card data.<br>Please try again later.');
+            }
+        }
+
+        // Run on page load
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>
