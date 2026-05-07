@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SAMS Name Card</title>
     <link rel="shortcut icon" href="/img/sam-logo.png" type="image/x-icon">
-    <link rel="stylesheet" href="/css/style.css?v=3">
+    <link rel="stylesheet" href="/css/style.css">
 
     <!-- PWA / Add to Home Screen -->
     <link rel="manifest" href="/manifest.json">
@@ -407,8 +407,8 @@
             document.getElementById('position').textContent = person.position;
 
             // Auto-fit name font size if too long, but don't go smaller than 24px
-            autoFitText(document.getElementById('firstname'), 36, 24);
-            autoFitText(document.getElementById('lastname'), 36, 24);
+            autoFitText(document.getElementById('firstname'), 40, 24);
+            autoFitText(document.getElementById('lastname'), 40, 24);
 
 
             // Email with mailto link
