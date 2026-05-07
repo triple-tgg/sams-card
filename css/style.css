@@ -10,7 +10,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 130vh;
+    min-height: 100vh;
     margin: 0;
     padding: 0;
 }
@@ -151,6 +151,8 @@ body {
 @media (max-width: 500px) {
     .card {
         max-width: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
         padding: 25px 25px 40px 25px;
         border-radius: 0;
         box-shadow: none;
