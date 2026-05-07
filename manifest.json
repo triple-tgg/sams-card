@@ -1,7 +1,7 @@
 {
   "name": "SAMS Name Card",
-  "short_name": "SAMS Card",
-  "description": "SAMS - Siam Aircraft Maintenance Services Digital Name Card",
+  "short_name": "SAMS Name Card",
+  "description": "SAMS Engineering - Digital Name Card",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
