@@ -336,8 +336,8 @@
 
             new QRCode(qrContainer, {
                 text: vcard,
-                width: 120,
-                height: 120,
+                width: 150,
+                height: 150,
                 colorDark: '#1e3a5f',
                 colorLight: '#ffffff',
                 correctLevel: QRCode.CorrectLevel.M
@@ -407,8 +407,8 @@
             document.getElementById('position').textContent = person.position;
 
             // Auto-fit name font size if too long, but don't go smaller than 24px
-            autoFitText(document.getElementById('firstname'), 44, 24);
-            autoFitText(document.getElementById('lastname'), 44, 24);
+            autoFitText(document.getElementById('firstname'), 48, 24);
+            autoFitText(document.getElementById('lastname'), 48, 24);
 
 
             // Email with mailto link
