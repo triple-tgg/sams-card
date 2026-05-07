@@ -5,9 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SAMS Name Card</title>
-    <link rel="shortcut icon" href="https://pub-08436db5aed446488f1d41d50965fe1a.r2.dev/namecard/img/sam-logo.png"
-        type="image/x-icon">
-    <link rel="stylesheet" href="https://pub-08436db5aed446488f1d41d50965fe1a.r2.dev/namecard/css/style.css?v=3">
+    <link rel="shortcut icon" href="/img/sam-logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="/css/style.css?v=3">
 
     <!-- PWA / Add to Home Screen -->
     <link rel="manifest" href="/manifest.json">
@@ -17,7 +16,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="SAMS Card">
-    <link rel="apple-touch-icon" href="https://pub-08436db5aed446488f1d41d50965fe1a.r2.dev/namecard/img/sam-logo.png">
+    <link rel="apple-touch-icon" href="/img/sam-logo.png">
     <style>
         .icon-position,
         .icon-email,
@@ -29,6 +28,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        /* Long name overflow fix */
+        .firstname,
+        .lastname {
+            overflow: hidden;
+            white-space: normal;
+            word-break: break-word;
         }
 
         /* Loading State */
@@ -186,7 +193,7 @@
     <!-- Card (hidden by default) -->
     <div id="namecard" class="card" style="display: none;">
         <div class="logo">
-            <img src="https://pub-08436db5aed446488f1d41d50965fe1a.r2.dev/namecard/img/sam-logo.png" alt="SAMS Logo">
+            <img src="/img/sam-logo.png" alt="SAMS Logo">
         </div>
 
         <div class="name">
@@ -198,24 +205,21 @@
         <div class="info">
             <div class="info-item">
                 <div class="icon-position">
-                    <img src="https://pub-08436db5aed446488f1d41d50965fe1a.r2.dev/namecard/img/contactIcon.png"
-                        alt="Contact Icon">
+                    <img src="/img/contactIcon.png" alt="Contact Icon">
                 </div>
                 <span id="position"></span>
             </div>
 
             <div class="info-item">
                 <div class="icon-email">
-                    <img src="https://pub-08436db5aed446488f1d41d50965fe1a.r2.dev/namecard/img/emailIcon.png"
-                        alt="Email Icon">
+                    <img src="/img/emailIcon.png" alt="Email Icon">
                 </div>
                 <span id="email"></span>
             </div>
 
             <div class="info-item">
                 <div class="icon-telphone">
-                    <img src="https://pub-08436db5aed446488f1d41d50965fe1a.r2.dev/namecard/img/telphoneIcon.png"
-                        alt="Telphone Icon">
+                    <img src="/img/telphoneIcon.png" alt="Telphone Icon">
                 </div>
                 <span id="phone"></span>
             </div>
@@ -224,13 +228,6 @@
         <div class="qr-section">
             <div id="qrcode"></div>
         </div>
-
-        <!-- <button class="save-contact-btn" id="saveContactBtn" onclick="saveContact()">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4zm9-5h-2v2h-2v2h2v2h2v-2h2v-2h-2z"/>
-            </svg>
-            Save Contact
-        </button> -->
     </div>
 
     <!-- QR Code Library -->
@@ -339,8 +336,8 @@
 
             new QRCode(qrContainer, {
                 text: vcard,
-                width: 160,
-                height: 160,
+                width: 120,
+                height: 120,
                 colorDark: '#1e3a5f',
                 colorLight: '#ffffff',
                 correctLevel: QRCode.CorrectLevel.M
@@ -382,7 +379,8 @@
         function autoFitText(el, maxSize, minSize) {
             el.style.fontSize = maxSize + 'px';
             const parent = el.parentElement;
-            while (el.scrollWidth > parent.clientWidth && parseInt(el.style.fontSize) > minSize) {
+            // Subtract 20 to ensure it leaves a right margin
+            while (el.scrollWidth > (parent.clientWidth - 20) && parseInt(el.style.fontSize) > minSize) {
                 el.style.fontSize = (parseInt(el.style.fontSize) - 1) + 'px';
             }
         }
@@ -408,9 +406,9 @@
             document.getElementById('lastname').textContent = lastName;
             document.getElementById('position').textContent = person.position;
 
-            // Auto-fit name font size if too long
-            autoFitText(document.getElementById('firstname'), 36, 18);
-            autoFitText(document.getElementById('lastname'), 36, 18);
+            // Auto-fit name font size if too long, but don't go smaller than 24px
+            autoFitText(document.getElementById('firstname'), 36, 24);
+            autoFitText(document.getElementById('lastname'), 36, 24);
 
 
             // Email with mailto link
