@@ -11,7 +11,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 20px;
+    /* padding: 20px; */
 }
 
 .card {
@@ -149,25 +149,25 @@ body {
         max-width: 100%;
         padding: 40px 30px 0 30px;
     }
-    
+
     .logo img {
         width: 130px;
     }
-    
+
     .firstname,
     .lastname {
         font-size: 40px;
     }
-    
+
     .info-item span {
         font-size: 14px;
     }
-    
+
     #qrcode {
         width: 140px;
         height: 140px;
     }
-    
+
     .wave {
         height: 150px;
     }
@@ -177,56 +177,56 @@ body {
     .card {
         padding: 35px 25px 0 25px;
     }
-    
+
     .logo {
         margin-bottom: 30px;
     }
-    
+
     .logo img {
         width: 110px;
     }
-    
+
     .name {
         margin-bottom: 30px;
     }
-    
+
     .firstname,
     .lastname {
         font-size: 36px;
     }
-    
+
     .info {
         margin-bottom: 30px;
     }
-    
+
     .info-item {
         margin-bottom: 15px;
     }
-    
+
     .icon {
         width: 32px;
         height: 32px;
     }
-    
+
     .icon svg {
         width: 16px;
         height: 16px;
     }
-    
+
     .info-item span {
         font-size: 13px;
     }
-    
+
     .qr-section {
         padding: 15px;
         margin-bottom: 25px;
     }
-    
+
     #qrcode {
         width: 120px;
         height: 120px;
     }
-    
+
     .wave {
         height: 130px;
     }
