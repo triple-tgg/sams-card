@@ -7,7 +7,7 @@
     <title>SAMS Name Card</title>
     <link rel="shortcut icon" href="https://pub-08436db5aed446488f1d41d50965fe1a.r2.dev/namecard/img/sam-logo.png"
         type="image/x-icon">
-    <link rel="stylesheet" href="https://pub-08436db5aed446488f1d41d50965fe1a.r2.dev/namecard/css/style.css">
+    <link rel="stylesheet" href="https://pub-08436db5aed446488f1d41d50965fe1a.r2.dev/namecard/css/style.css?v=2">
 
     <!-- PWA / Add to Home Screen -->
     <link rel="manifest" href="/manifest.json">
@@ -378,6 +378,15 @@
             URL.revokeObjectURL(url);
         }
 
+        // Auto-fit text: shrink font size until it fits in one line
+        function autoFitText(el, maxSize, minSize) {
+            el.style.fontSize = maxSize + 'px';
+            const parent = el.parentElement;
+            while (el.scrollWidth > parent.clientWidth && parseInt(el.style.fontSize) > minSize) {
+                el.style.fontSize = (parseInt(el.style.fontSize) - 1) + 'px';
+            }
+        }
+
         // Render person data to card
         function renderCard(person) {
             const { firstName, lastName } = splitName(person.name);
@@ -398,6 +407,10 @@
             document.getElementById('firstname').textContent = firstName;
             document.getElementById('lastname').textContent = lastName;
             document.getElementById('position').textContent = person.position;
+
+            // Auto-fit name font size if too long
+            autoFitText(document.getElementById('firstname'), 36, 18);
+            autoFitText(document.getElementById('lastname'), 36, 18);
 
 
             // Email with mailto link
