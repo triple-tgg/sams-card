@@ -8,8 +8,7 @@
     <link rel="shortcut icon" href="/img/sam-logo.png" type="image/x-icon">
     <link rel="stylesheet" href="/css/style.css">
 
-    <!-- PWA / Add to Home Screen -->
-    <link rel="manifest" href="/manifest.json">
+    <!-- PWA / Add to Home Screen (manifest is injected dynamically by JS) -->
     <meta name="theme-color" content="#1e3a5f">
 
     <!-- iOS Add to Home Screen -->
@@ -401,6 +400,10 @@
             }
             metaDesc.content = `${person.name} - ${person.position} at SAMS`;
 
+            // Update iOS home screen title
+            const appleTitle = document.querySelector('meta[name="apple-mobile-web-app-title"]');
+            if (appleTitle) appleTitle.content = `${firstName} | SAMS`;
+
             // Fill in card data
             document.getElementById('firstname').textContent = firstName;
             document.getElementById('lastname').textContent = lastName;
@@ -468,7 +471,44 @@
             }
         }
 
+        // Dynamic PWA manifest — sets start_url to the current path
+        // so Add-to-Home-Screen opens the correct person's card
+        function injectDynamicManifest() {
+            const currentPath = window.location.pathname || '/';
+            const manifest = {
+                name: 'SAMS Name Card',
+                short_name: 'SAMS Card',
+                description: 'SAMS Engineering - Digital Name Card',
+                start_url: currentPath,
+                display: 'standalone',
+                background_color: '#ffffff',
+                theme_color: '#1e3a5f',
+                orientation: 'portrait',
+                icons: [
+                    {
+                        src: '/img/sam-logo.png',
+                        sizes: '192x192',
+                        type: 'image/png',
+                        purpose: 'any maskable'
+                    },
+                    {
+                        src: '/img/sam-logo.png',
+                        sizes: '512x512',
+                        type: 'image/png',
+                        purpose: 'any maskable'
+                    }
+                ]
+            };
+            const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('link');
+            link.rel = 'manifest';
+            link.href = url;
+            document.head.appendChild(link);
+        }
+
         // Run on page load
+        injectDynamicManifest();
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
