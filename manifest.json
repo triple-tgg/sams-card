@@ -9,13 +9,13 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "https://pub-08436db5aed446488f1d41d50965fe1a.r2.dev/namecard/img/sam-logo.png",
+      "src": "https://pub-08436db5aed446488f1d41d50965fe1a.r2.dev/namecard/img/sam-logo-1.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://pub-08436db5aed446488f1d41d50965fe1a.r2.dev/namecard/img/sam-logo.png",
+      "src": "https://pub-08436db5aed446488f1d41d50965fe1a.r2.dev/namecard/img/sam-logo-1.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
